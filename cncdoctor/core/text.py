@@ -58,12 +58,15 @@ class RuntimeSettings:
 
         return cls(
             base_dir=base_dir,
-            seed_sql_path=_resolve_path("APP_CASE_SQL_SEED", base_dir / "guzhanganli.sql"),
+            seed_sql_path=_resolve_path(
+                "APP_CASE_SQL_SEED",
+                base_dir / "data/seeds/fault_cases.sql",
+            ),
             case_db_path=_resolve_path(
                 "APP_CASE_DB_PATH",
-                base_dir / "Shukongdashi" / "runtime" / "fault_cases.sqlite3",
+                base_dir / "cncdoctor" / "runtime" / "fault_cases.sqlite3",
             ),
-            demo_dir=_resolve_path("APP_DEMO_DIR", base_dir / "Shukongdashi" / "demo"),
+            demo_dir=_resolve_path("APP_DEMO_DIR", base_dir / "cncdoctor" / "demo"),
             online_search_enabled=os.getenv("APP_ENABLE_ONLINE_SEARCH", "1") != "0",
             web_search_timeout_seconds=max(int(os.getenv("APP_WEB_SEARCH_TIMEOUT", "8")), 1),
             cors_allow_origin=os.getenv("APP_CORS_ALLOW_ORIGIN", "*").strip() or "*",
@@ -246,7 +249,7 @@ class HybridFaultTextClassifier(TextClassifier):
 
     def _load_cnn_backend(self):
         try:
-            from Shukongdashi.test_my.test_cnnrnn.predict import CnnModel
+            from cncdoctor.test_my.test_cnnrnn.predict import CnnModel
         except Exception:
             return None
 

@@ -120,7 +120,7 @@ class HealthView(BaseJsonView):
         container = get_container()
         return self.respond(
             data={
-                "service": "Shukongdashi",
+                "service": "CNCDoctor",
                 "features": ["qa", "pa", "save", "buquan", "wenda"],
                 "graph_enabled": container.graph_repository.available(),
                 "case_count": container.case_repository.case_count(),
@@ -138,7 +138,7 @@ class DocsView(BaseJsonView):
     def get(self, request):
         return self.respond(
             data={
-                "service": "Shukongdashi API",
+                "service": "CNCDoctor API",
                 "version": 2,
                 "response_shape": {"code": 0, "msg": "成功", "data": {}},
                 "endpoints": [

@@ -1,4 +1,4 @@
-from Shukongdashi.test_my.test_cnnrnn.predict import CnnModel
+from cncdoctor.test_my.test_cnnrnn.predict import CnnModel
 
 cnn_model = CnnModel()
 test_demo = ['FANUC机床类型机床类型M的卧式加工中心',

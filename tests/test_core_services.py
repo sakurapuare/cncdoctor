@@ -8,21 +8,21 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from Shukongdashi.core.models import (
+from cncdoctor.core.models import (
     DiagnosisCandidate,
     FaultQuery,
     FeedbackRecord,
     ParsedFaultText,
     ReasoningStep,
 )
-from Shukongdashi.core.repositories import (
+from cncdoctor.core.repositories import (
     GraphKnowledgeRepository,
     NullGraphKnowledgeRepository,
     SQLiteFaultCaseRepository,
     SqlSeedLoader,
 )
-from Shukongdashi.core.services import CompletionService, DiagnosisService, QuestionAnsweringService
-from Shukongdashi.core.text import (
+from cncdoctor.core.services import CompletionService, DiagnosisService, QuestionAnsweringService
+from cncdoctor.core.text import (
     FaultTextParser,
     HybridFaultTextClassifier,
     ResourceCatalog,
@@ -36,18 +36,19 @@ class CoreServiceTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()
         self.base_dir = Path(self.temp_dir.name)
-        (self.base_dir / "Shukongdashi" / "demo").mkdir(parents=True, exist_ok=True)
-        (self.base_dir / "Shukongdashi" / "demo" / "stopwords.txt").write_text(
+        (self.base_dir / "data" / "seeds").mkdir(parents=True, exist_ok=True)
+        (self.base_dir / "cncdoctor" / "demo").mkdir(parents=True, exist_ok=True)
+        (self.base_dir / "cncdoctor" / "demo" / "stopwords.txt").write_text(
             "的\n了\n", encoding="utf-8"
         )
-        (self.base_dir / "Shukongdashi" / "demo" / "zhuyu.txt").write_text(
+        (self.base_dir / "cncdoctor" / "demo" / "zhuyu.txt").write_text(
             "主轴\n刀库\n", encoding="utf-8"
         )
-        (self.base_dir / "Shukongdashi" / "demo" / "fencidian.txt").write_text(
+        (self.base_dir / "cncdoctor" / "demo" / "fencidian.txt").write_text(
             "换刀\n报警\n", encoding="utf-8"
         )
 
-        self.seed_path = self.base_dir / "guzhanganli.sql"
+        self.seed_path = self.base_dir / "data/seeds/fault_cases.sql"
         self.seed_path.write_text(
             "\n".join(
                 [
@@ -68,8 +69,8 @@ class CoreServiceTests(unittest.TestCase):
         self.settings = RuntimeSettings(
             base_dir=self.base_dir,
             seed_sql_path=self.seed_path,
-            case_db_path=self.base_dir / "Shukongdashi" / "runtime" / "fault_cases.sqlite3",
-            demo_dir=self.base_dir / "Shukongdashi" / "demo",
+            case_db_path=self.base_dir / "cncdoctor" / "runtime" / "fault_cases.sqlite3",
+            demo_dir=self.base_dir / "cncdoctor" / "demo",
             online_search_enabled=False,
             web_search_timeout_seconds=8,
             cors_allow_origin="*",
@@ -200,7 +201,7 @@ class FakeGraphRepository(GraphKnowledgeRepository):
 HAS_DJANGO = importlib.util.find_spec("django") is not None
 
 if HAS_DJANGO:
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Shukongdashi.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cncdoctor.settings")
     import django
 
     django.setup()
@@ -210,7 +211,7 @@ if HAS_DJANGO:
     from django.core.management import call_command
     from django.test import RequestFactory
 
-    from Shukongdashi.api_views import DiagnosisView, DocsView
+    from cncdoctor.api_views import DiagnosisView, DocsView
 
 
 @unittest.skipUnless(HAS_DJANGO, "django is not installed")
@@ -263,7 +264,7 @@ class ApiViewTests(unittest.TestCase):
             },
         )()
 
-        with patch("Shukongdashi.api_views.get_container", return_value=fake_container):
+        with patch("cncdoctor.api_views.get_container", return_value=fake_container):
             response = DiagnosisView.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
@@ -289,7 +290,7 @@ class ApiViewTests(unittest.TestCase):
             },
         )()
 
-        with patch("Shukongdashi.api_views.get_container", return_value=fake_container):
+        with patch("cncdoctor.api_views.get_container", return_value=fake_container):
             response = DiagnosisView.as_view()(request)
 
         self.assertEqual(response.status_code, 204)
@@ -300,7 +301,7 @@ class ApiViewTests(unittest.TestCase):
         response = DocsView.as_view()(request)
         payload = json.loads(response.content.decode("utf-8"))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(payload["data"]["service"], "Shukongdashi API")
+        self.assertEqual(payload["data"]["service"], "CNCDoctor API")
         self.assertTrue(any(item["path"] == "/qa" for item in payload["data"]["endpoints"]))
 
 

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from Shukongdashi.core.container import get_container
+from cncdoctor.core.container import get_container
 
 
 class Command(BaseCommand):

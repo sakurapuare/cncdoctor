@@ -1,6 +1,6 @@
 import uuid
 
-from Shukongdashi.core.container import get_container
+from cncdoctor.core.container import get_container
 
 
 class RequestContextMiddleware:

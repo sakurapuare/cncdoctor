@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from Shukongdashi.core.container import get_container
+from cncdoctor.core.container import get_container
 
 
 class Neo4j:

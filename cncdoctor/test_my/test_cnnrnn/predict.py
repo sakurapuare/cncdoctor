@@ -6,18 +6,18 @@ import os
 import tensorflow as tf
 import tensorflow.contrib.keras as kr
 
-from Shukongdashi.test_my.test_cnnrnn.cnn_model import TCNNConfig, TextCNN
-from Shukongdashi.test_my.test_cnnrnn.data.cnews_loader import read_category, read_vocab
+from cncdoctor.test_my.test_cnnrnn.cnn_model import TCNNConfig, TextCNN
+from cncdoctor.test_my.test_cnnrnn.data.cnews_loader import read_category, read_vocab
 
 try:
     bool(type(unicode))
 except NameError:
     unicode = str
 
-base_dir = os.getcwd()+'\\Shukongdashi\\demo\\data\\cnews'
+base_dir = os.getcwd()+'\\cncdoctor\\demo\\data\\cnews'
 vocab_dir = os.path.join(base_dir, 'guzhang.vocab.txt')
 
-save_dir = os.getcwd()+'\\Shukongdashi\\demo\\checkpoints\\textcnn'
+save_dir = os.getcwd()+'\\cncdoctor\\demo\\checkpoints\\textcnn'
 save_path = os.path.join(save_dir, 'best_validation')  # 最佳验证结果保存路径
 
 

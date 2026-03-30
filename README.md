@@ -7,10 +7,12 @@
 ```text
 .
 ├── .github/workflows/        # CI
+├── data/                     # 开发数据库与种子数据
 ├── docs/                     # 架构、API、开发文档
+├── frontend/                 # 前端静态资源与页面
 ├── requirements/            # 依赖分层
 ├── scripts/                 # 本地开发脚本
-├── Shukongdashi/            # Django 项目与核心代码
+├── cncdoctor/                # Django 项目与核心代码
 ├── tests/                   # 自动化测试
 ├── Makefile                 # 常用工程命令
 ├── pyproject.toml           # Ruff / pytest / tooling 配置
@@ -32,7 +34,8 @@
 
 - 删除仓库中的硬编码账号口令和导出元数据
 - 新增面向对象核心层：领域模型、文本解析、仓储、服务容器、接口视图
-- 将案例库内置到本地 SQLite 仓储，首次运行自动从 `guzhanganli.sql` 导入
+- 将根目录中的中文目录与散落文件迁移为标准 ASCII 路径
+- 将案例库内置到本地 SQLite 仓储，首次运行自动从 `data/seeds/fault_cases.sql` 导入
 - Neo4j 和 CNN 改为可选依赖，不再阻断系统启动
 - 诊断、问答、补全、在线分析、反馈全部改为统一服务对象
 - Django 路由改为 class-based views，接口返回统一 JSON 结构
@@ -48,7 +51,7 @@
 核心目录：
 
 ```text
-Shukongdashi/
+cncdoctor/
 ├── api_views.py              # Django API 入口
 ├── core/
 │   ├── container.py          # 服务容器
@@ -116,9 +119,9 @@ export DJANGO_ALLOWED_HOSTS="127.0.0.1,localhost"
 
 export APP_ENABLE_ONLINE_SEARCH=1
 export APP_WEB_SEARCH_TIMEOUT=8
-export APP_CASE_DB_PATH="./Shukongdashi/runtime/fault_cases.sqlite3"
-export APP_CASE_SQL_SEED="./guzhanganli.sql"
-export APP_DEMO_DIR="./Shukongdashi/demo"
+export APP_CASE_DB_PATH="./cncdoctor/runtime/fault_cases.sqlite3"
+export APP_CASE_SQL_SEED="./data/seeds/fault_cases.sql"
+export APP_DEMO_DIR="./cncdoctor/demo"
 
 export APP_CORS_ALLOW_ORIGIN="*"
 export APP_CORS_ALLOW_METHODS="GET,POST,OPTIONS"

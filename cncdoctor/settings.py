@@ -12,7 +12,7 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
-    'Shukongdashi.apps.ShukongdashiConfig',
+    'cncdoctor.apps.CNCDoctorConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,15 +25,15 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'Shukongdashi.middleware.RequestContextMiddleware',
-    'Shukongdashi.middleware.ApiCorsMiddleware',
+    'cncdoctor.middleware.RequestContextMiddleware',
+    'cncdoctor.middleware.ApiCorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Shukongdashi.urls'
+ROOT_URLCONF = 'cncdoctor.urls'
 
 TEMPLATES = [
     {
@@ -51,12 +51,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Shukongdashi.wsgi.application'
+WSGI_APPLICATION = 'cncdoctor.wsgi.application'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'data/dev.sqlite3',
     }
 }
 

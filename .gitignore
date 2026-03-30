@@ -2,7 +2,8 @@
 .venv/
 __pycache__/
 *.pyc
-Shukongdashi/runtime/*.sqlite3
-Shukongdashi/runtime/*.sqlite3-*
+cncdoctor/runtime/*.sqlite3
+cncdoctor/runtime/*.sqlite3-*
+data/*.sqlite3-*
 .pytest_cache/
 .ruff_cache/

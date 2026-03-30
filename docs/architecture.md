@@ -9,9 +9,9 @@ domain logic from Django transport concerns.
 
 ### API layer
 
-- `Shukongdashi/api_views.py`
-- `Shukongdashi/urls.py`
-- `Shukongdashi/middleware.py`
+- `cncdoctor/api_views.py`
+- `cncdoctor/urls.py`
+- `cncdoctor/middleware.py`
 
 Responsibilities:
 
@@ -22,8 +22,8 @@ Responsibilities:
 
 ### Application layer
 
-- `Shukongdashi/core/services.py`
-- `Shukongdashi/core/container.py`
+- `cncdoctor/core/services.py`
+- `cncdoctor/core/container.py`
 
 Responsibilities:
 
@@ -33,8 +33,8 @@ Responsibilities:
 
 ### Domain layer
 
-- `Shukongdashi/core/models.py`
-- `Shukongdashi/core/text.py`
+- `cncdoctor/core/models.py`
+- `cncdoctor/core/text.py`
 
 Responsibilities:
 
@@ -44,9 +44,9 @@ Responsibilities:
 
 ### Infrastructure layer
 
-- `Shukongdashi/core/repositories.py`
-- `Shukongdashi/toolkit/pre_load.py`
-- `Shukongdashi/Model/neo_models.py`
+- `cncdoctor/core/repositories.py`
+- `cncdoctor/toolkit/pre_load.py`
+- `cncdoctor/model/neo_models.py`
 
 Responsibilities:
 
@@ -64,6 +64,6 @@ Responsibilities:
 
 ## Operational notes
 
-- Runtime case data is created under `Shukongdashi/runtime/`.
-- `python manage.py rebuild_case_db` recreates the SQLite database from `guzhanganli.sql`.
+- Runtime case data is created under `cncdoctor/runtime/`.
+- `python manage.py rebuild_case_db` recreates the SQLite database from `data/seeds/fault_cases.sql`.
 - `python manage.py system_doctor` reports the active backend state.
