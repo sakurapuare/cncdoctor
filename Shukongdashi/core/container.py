@@ -3,7 +3,7 @@ from __future__ import annotations
 from functools import cached_property, lru_cache
 from pathlib import Path
 
-from .repositories import SqlSeedLoader, SQLiteFaultCaseRepository, build_graph_repository
+from .repositories import SQLiteFaultCaseRepository, SqlSeedLoader, build_graph_repository
 from .services import (
     CompletionService,
     DiagnosisService,

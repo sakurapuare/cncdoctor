@@ -8,8 +8,19 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from Shukongdashi.core.models import DiagnosisCandidate, FaultQuery, FeedbackRecord, ParsedFaultText, ReasoningStep
-from Shukongdashi.core.repositories import GraphKnowledgeRepository, NullGraphKnowledgeRepository, SqlSeedLoader, SQLiteFaultCaseRepository
+from Shukongdashi.core.models import (
+    DiagnosisCandidate,
+    FaultQuery,
+    FeedbackRecord,
+    ParsedFaultText,
+    ReasoningStep,
+)
+from Shukongdashi.core.repositories import (
+    GraphKnowledgeRepository,
+    NullGraphKnowledgeRepository,
+    SQLiteFaultCaseRepository,
+    SqlSeedLoader,
+)
 from Shukongdashi.core.services import CompletionService, DiagnosisService, QuestionAnsweringService
 from Shukongdashi.core.text import (
     FaultTextParser,
@@ -26,16 +37,29 @@ class CoreServiceTests(unittest.TestCase):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.base_dir = Path(self.temp_dir.name)
         (self.base_dir / "Shukongdashi" / "demo").mkdir(parents=True, exist_ok=True)
-        (self.base_dir / "Shukongdashi" / "demo" / "stopwords.txt").write_text("的\n了\n", encoding="utf-8")
-        (self.base_dir / "Shukongdashi" / "demo" / "zhuyu.txt").write_text("主轴\n刀库\n", encoding="utf-8")
-        (self.base_dir / "Shukongdashi" / "demo" / "fencidian.txt").write_text("换刀\n报警\n", encoding="utf-8")
+        (self.base_dir / "Shukongdashi" / "demo" / "stopwords.txt").write_text(
+            "的\n了\n", encoding="utf-8"
+        )
+        (self.base_dir / "Shukongdashi" / "demo" / "zhuyu.txt").write_text(
+            "主轴\n刀库\n", encoding="utf-8"
+        )
+        (self.base_dir / "Shukongdashi" / "demo" / "fencidian.txt").write_text(
+            "换刀\n报警\n", encoding="utf-8"
+        )
 
         self.seed_path = self.base_dir / "guzhanganli.sql"
         self.seed_path.write_text(
             "\n".join(
                 [
-                    "INSERT INTO `guzhanganli` VALUES ('主轴联轴器损坏', '开机后主轴异响，报警', '更换联轴器后恢复正常。');",
-                    "INSERT INTO `guzhanganli` VALUES ('刀库位置偏移', '自动换刀卡住，主轴报警', '调整刀库四零位置参数后恢复正常。');",
+                    (
+                        "INSERT INTO `guzhanganli` VALUES "
+                        "('主轴联轴器损坏', '开机后主轴异响，报警', '更换联轴器后恢复正常。');"
+                    ),
+                    (
+                        "INSERT INTO `guzhanganli` VALUES "
+                        "('刀库位置偏移', '自动换刀卡住，主轴报警', "
+                        "'调整刀库四零位置参数后恢复正常。');"
+                    ),
                 ]
             ),
             encoding="utf-8",

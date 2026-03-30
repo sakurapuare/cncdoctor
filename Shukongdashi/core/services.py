@@ -16,7 +16,13 @@ from .models import (
     SearchResult,
 )
 from .repositories import GraphKnowledgeRepository, SQLiteFaultCaseRepository
-from .text import FaultTextParser, RuntimeSettings, SimilarityScorer, normalize_text, unique_preserve_order
+from .text import (
+    FaultTextParser,
+    RuntimeSettings,
+    SimilarityScorer,
+    normalize_text,
+    unique_preserve_order,
+)
 
 
 class DiagnosisService:
@@ -225,10 +231,11 @@ class DiagnosisService:
         candidate: DiagnosisCandidate,
     ) -> None:
         existing = candidate_map.get(candidate.cause)
-        merged_answers = unique_preserve_order((existing.answers if existing else []) + candidate.answers)
+        existing_answers = existing.answers if existing else []
+        merged_answers = unique_preserve_order(existing_answers + candidate.answers)
         merged_steps = (existing.reasoning_steps if existing else []) + candidate.reasoning_steps
         merged_sources = unique_preserve_order(
-            ((existing.source.split("+") if existing else []) + candidate.source.split("+"))
+            (existing.source.split("+") if existing else []) + candidate.source.split("+")
         )
         candidate_map[candidate.cause] = DiagnosisCandidate(
             cause=candidate.cause,
@@ -252,7 +259,9 @@ class CompletionService:
         suggestions = self._case_repository.search_prefix(fragment, limit=5)
         if self._graph_repository.available():
             suggestions.extend(self._graph_repository.search_descriptions(fragment, limit=5))
-        return AutocompleteResult(query=fragment, suggestions=unique_preserve_order(suggestions)[:5])
+        return AutocompleteResult(
+            query=fragment, suggestions=unique_preserve_order(suggestions)[:5]
+        )
 
 
 class QuestionAnsweringService:
@@ -276,15 +285,20 @@ class QuestionAnsweringService:
     def answer(self, question: str) -> QuestionAnswerResult:
         subject, question_type = self._parse_question(question)
         if question_type == -1:
-            fallback = [case.analysis for case, _ in self._case_repository.search_similar(question, limit=3)]
-            return QuestionAnswerResult(question=question, answers=unique_preserve_order(fallback))
+            fallback = self._case_repository.search_similar(question, limit=3)
+            return QuestionAnswerResult(
+                question=question,
+                answers=unique_preserve_order(case.analysis for case, _ in fallback),
+            )
 
         if self._graph_repository.available():
             answers = self._answer_from_graph(subject, question_type)
             if answers:
                 return QuestionAnswerResult(question=question, answers=answers)
 
-        return QuestionAnswerResult(question=question, answers=self._answer_from_cases(subject, question_type))
+        return QuestionAnswerResult(
+            question=question, answers=self._answer_from_cases(subject, question_type)
+        )
 
     def _answer_from_graph(self, subject: str, question_type: int) -> list[str]:
         if question_type == 0:
@@ -321,9 +335,12 @@ class QuestionAnsweringService:
         hits = self._case_repository.search_similar(subject, limit=10)
         answers: list[str] = []
         if question_type == 0:
-            answers = [case.phenomenon for case in self._case_repository.cases_for_cause(subject, limit=5)]
+            cause_cases = self._case_repository.cases_for_cause(subject, limit=5)
+            answers = [case.phenomenon for case in cause_cases]
         elif question_type == 3:
-            answers = [case.cause for case, _ in hits if subject.upper() in case.searchable_text().upper()]
+            answers = [
+                case.cause for case, _ in hits if subject.upper() in case.searchable_text().upper()
+            ]
         else:
             answers = [case.analysis for case, _ in hits]
         return unique_preserve_order(answers)[:5]
@@ -538,15 +555,17 @@ class OnlineAnalysisService:
             answers = [(case.analysis, score) for case, score in fallback_cases]
             return {
                 "answer": [
-                    {"answer": answer, "zan": max(int(score * 100), 1)}
-                    for answer, score in answers
+                    {"answer": answer, "zan": max(int(score * 100), 1)} for answer, score in answers
                 ],
                 "simple_url": [],
                 "source": "case_repo",
             }
 
         return {
-            "answer": [{"answer": item.snippet or item.title, "zan": int(item.score * 100)} for item in links],
+            "answer": [
+                {"answer": item.snippet or item.title, "zan": int(item.score * 100)}
+                for item in links
+            ],
             "simple_url": [{"title": item.title, "sub_url": item.url} for item in links],
             "source": "web",
         }

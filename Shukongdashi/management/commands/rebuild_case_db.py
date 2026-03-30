@@ -11,6 +11,8 @@ class Command(BaseCommand):
         count = container.case_repository.rebuild_from_seed()
         self.stdout.write(
             self.style.SUCCESS(
-                f"Rebuilt case database at {container.case_repository.database_path} with {count} records."
+                "Rebuilt case database at "
+                f"{container.case_repository.database_path} "
+                f"with {count} records."
             )
         )

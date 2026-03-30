@@ -125,7 +125,9 @@ class HealthView(BaseJsonView):
                 "graph_enabled": container.graph_repository.available(),
                 "case_count": container.case_repository.case_count(),
                 "classifier_backend": (
-                    "cnn" if getattr(container.classifier, "_cnn_backend", None) is not None else "heuristic"
+                    "cnn"
+                    if getattr(container.classifier, "_cnn_backend", None) is not None
+                    else "heuristic"
                 ),
                 "request_id": getattr(request, "request_id", ""),
             }
@@ -165,7 +167,15 @@ class DocsView(BaseJsonView):
                     {
                         "path": "/save",
                         "methods": ["GET", "POST", "OPTIONS"],
-                        "params": ["pinpai", "xinghao", "errorid", "question", "selectedList", "yuanyin", "answer"],
+                        "params": [
+                            "pinpai",
+                            "xinghao",
+                            "errorid",
+                            "question",
+                            "selectedList",
+                            "yuanyin",
+                            "answer",
+                        ],
                         "description": "反馈保存",
                     },
                     {
@@ -193,7 +203,6 @@ class DiagnosisView(BaseJsonView):
         return self._handle(request)
 
     def _handle(self, request):
-        payload = self.payload(request)
         question = self.str_param(request, "question")
         if not question:
             return self.respond(message="缺少 question 参数", code=400, status=400)
@@ -207,7 +216,12 @@ class DiagnosisView(BaseJsonView):
         )
         result = get_container().diagnosis_service.diagnose(query)
         if not result.candidates:
-            return self.respond(message="没有找到类似的答案", code=404, status=404, data=result.to_dict())
+            return self.respond(
+                message="没有找到类似的答案",
+                code=404,
+                status=404,
+                data=result.to_dict(),
+            )
         return self.respond(data=result.to_dict())
 
 
@@ -219,7 +233,6 @@ class OnlineAnalysisView(BaseJsonView):
         return self._handle(request)
 
     def _handle(self, request):
-        payload = self.payload(request)
         question = self.str_param(request, "question")
         if not question:
             return self.respond(message="缺少 question 参数", code=400, status=400)

@@ -19,8 +19,11 @@ class Command(BaseCommand):
             "online_search_enabled": container.settings.online_search_enabled,
             "web_search_timeout_seconds": container.settings.web_search_timeout_seconds,
             "cors_allow_origin": container.settings.cors_allow_origin,
-            "classifier_backend": (
-                "cnn" if getattr(container.classifier, "_cnn_backend", None) is not None else "heuristic"
-            ),
+            "classifier_backend": self._classifier_backend(container),
         }
         self.stdout.write(json.dumps(payload, ensure_ascii=False, indent=2))
+
+    def _classifier_backend(self, container) -> str:
+        if getattr(container.classifier, "_cnn_backend", None) is not None:
+            return "cnn"
+        return "heuristic"

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
-from functools import cached_property, lru_cache
+from functools import cached_property
 from pathlib import Path
-from typing import Iterable
 
 from .models import FaultQuery, ParsedFaultText
 
@@ -44,7 +44,7 @@ class RuntimeSettings:
     neo4j_password: str
 
     @classmethod
-    def from_base_dir(cls, base_dir: Path) -> "RuntimeSettings":
+    def from_base_dir(cls, base_dir: Path) -> RuntimeSettings:
         import os
 
         def _resolve_path(name: str, default: Path) -> Path:
@@ -126,9 +126,7 @@ class ResourceCatalog:
             return set()
         with path.open("r", encoding="utf-8") as handle:
             return {
-                line.strip().encode("utf-8").decode("utf-8-sig")
-                for line in handle
-                if line.strip()
+                line.strip().encode("utf-8").decode("utf-8-sig") for line in handle if line.strip()
             }
 
 
@@ -142,7 +140,11 @@ class Tokenizer:
         if not text:
             return []
         if self._jieba is not None:
-            return [token for token in self._jieba.cut(text) if token and token not in self._resources.stopwords]
+            return [
+                token
+                for token in self._jieba.cut(text)
+                if token and token not in self._resources.stopwords
+            ]
         tokens = re.findall(r"[A-Za-z0-9]+|[\u4e00-\u9fff]", text)
         return [token for token in tokens if token and token not in self._resources.stopwords]
 
@@ -159,8 +161,9 @@ class Tokenizer:
 
     def _try_load_jieba(self):
         try:
-            import jieba
             import logging
+
+            import jieba
         except ModuleNotFoundError:
             return None
 
@@ -179,6 +182,7 @@ class Tokenizer:
 class SimilarityScorer:
     def __init__(self, tokenizer: Tokenizer) -> None:
         self._tokenizer = tokenizer
+        self._token_cache: dict[str, set[str]] = {}
 
     def score(self, left: str, right: str) -> float:
         from difflib import SequenceMatcher
@@ -201,9 +205,10 @@ class SimilarityScorer:
 
         return round((seq_ratio * 0.5) + (token_ratio * 0.3) + (char_ratio * 0.2), 4)
 
-    @lru_cache(maxsize=4096)
     def _token_set(self, text: str) -> set[str]:
-        return set(self._tokenizer.tokenize(text))
+        if text not in self._token_cache:
+            self._token_cache[text] = set(self._tokenizer.tokenize(text))
+        return self._token_cache[text]
 
 
 class TextClassifier:
@@ -227,7 +232,11 @@ class HybridFaultTextClassifier(TextClassifier):
             except Exception:
                 pass
 
-        if re.search(r"(FANUC|SIEMENS|MITSUBISHI|GSK|KND|HNC|HASS|840D|802D|0M|0T|6M|MATE)", cleaned, re.IGNORECASE):
+        if re.search(
+            r"(FANUC|SIEMENS|MITSUBISHI|GSK|KND|HNC|HASS|840D|802D|0M|0T|6M|MATE)",
+            cleaned,
+            re.IGNORECASE,
+        ):
             return "机床类型"
         if re.search(r"[A-Z]{1,6}\d{2,6}", cleaned):
             return "故障现象"

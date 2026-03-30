@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Iterable
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable
 
 from .models import FaultCase, FeedbackRecord
-from .text import ParsedFaultText, RuntimeSettings, SimilarityScorer, normalize_text, unique_preserve_order
+from .text import (
+    ParsedFaultText,
+    RuntimeSettings,
+    SimilarityScorer,
+    normalize_text,
+    unique_preserve_order,
+)
 
 
 class SqlSeedLoader:
@@ -529,9 +535,7 @@ class Neo4jKnowledgeRepository(GraphKnowledgeRepository):
 
     def _connect(self):
         if not (
-            self._settings.neo4j_uri
-            and self._settings.neo4j_user
-            and self._settings.neo4j_password
+            self._settings.neo4j_uri and self._settings.neo4j_user and self._settings.neo4j_password
         ):
             return None
 
