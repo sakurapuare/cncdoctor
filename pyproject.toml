@@ -1,6 +1,13 @@
 [tool.ruff]
 line-length = 100
 target-version = "py39"
+extend-exclude = [
+    "Shukongdashi/demo/cosin.py",
+    "Shukongdashi/demo/data",
+    "Shukongdashi/test_my",
+    "Shukongdashi/toolkit",
+    "前端代码",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]

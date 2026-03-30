@@ -1,6 +1,21 @@
-# Shukongdashi
+# CNCDoctor
 
-数控机床故障诊断系统，已完成一次破坏性重构。
+面向数控机床故障诊断、案例检索、问答分析和维修反馈闭环的 Python 后端系统。
+
+## 工程结构
+
+```text
+.
+├── .github/workflows/        # CI
+├── docs/                     # 架构、API、开发文档
+├── requirements/            # 依赖分层
+├── scripts/                 # 本地开发脚本
+├── Shukongdashi/            # Django 项目与核心代码
+├── tests/                   # 自动化测试
+├── Makefile                 # 常用工程命令
+├── pyproject.toml           # Ruff / pytest / tooling 配置
+└── requirement.txt          # 兼容旧入口，转发到 requirements/base.txt
+```
 
 ## 这次重构解决了什么
 
@@ -121,7 +136,7 @@ export APP_NEO4J_PASSWORD="replace-this"
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirement.txt
+pip install -r requirements/dev.txt
 python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -129,6 +144,7 @@ python manage.py runserver 0.0.0.0:8000
 
 ```bash
 make setup
+make lint
 make test
 make check
 make run
@@ -140,6 +156,12 @@ make run
 python manage.py rebuild_case_db
 python manage.py system_doctor
 ```
+
+## 工程文档
+
+- [架构说明](docs/architecture.md)
+- [API 说明](docs/api.md)
+- [开发说明](docs/development.md)
 
 ## 建议的验证顺序
 

@@ -1,0 +1,5 @@
+Django>=4.2,<5.1
+requests>=2.31,<3.0
+beautifulsoup4>=4.12,<5.0
+jieba>=0.42,<1.0
+py2neo>=2021.2.4,<2022.0
