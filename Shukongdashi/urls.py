@@ -1,30 +1,29 @@
-"""Shukongdashi URL Configuration
+from django.urls import path
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.conf.urls import url
-from Shukongdashi.demo import question_zhenduan
-from Shukongdashi.demo import question_baocun
-from Shukongdashi.demo import question_pa
-from Shukongdashi.demo import question_buquan
-from Shukongdashi.demo import question_wenda
-from . import view
+from .api_views import (
+    CompletionView,
+    DiagnosisView,
+    DocsView,
+    FeedbackView,
+    HealthView,
+    OnlineAnalysisView,
+    QuestionView,
+)
+
 urlpatterns = [
-    url(r'^$', view.test),
-    url(r'^qa', question_zhenduan.question_answering),
-    url(r'^pa', question_pa.main),
-    url(r'^save', question_baocun.question_baocun),
-    url(r'^buquan', question_buquan.question_buquan),
-    url(r'^wenda', question_wenda.question_wenda),
+    path("", HealthView.as_view(), name="health"),
+    path("docs", DocsView.as_view(), name="docs"),
+    path("docs/", DocsView.as_view(), name="docs-slash"),
+    path("health", HealthView.as_view(), name="health-detail"),
+    path("health/", HealthView.as_view(), name="health-detail-slash"),
+    path("qa", DiagnosisView.as_view(), name="qa"),
+    path("qa/", DiagnosisView.as_view(), name="qa-slash"),
+    path("pa", OnlineAnalysisView.as_view(), name="pa"),
+    path("pa/", OnlineAnalysisView.as_view(), name="pa-slash"),
+    path("save", FeedbackView.as_view(), name="save"),
+    path("save/", FeedbackView.as_view(), name="save-slash"),
+    path("buquan", CompletionView.as_view(), name="buquan"),
+    path("buquan/", CompletionView.as_view(), name="buquan-slash"),
+    path("wenda", QuestionView.as_view(), name="wenda"),
+    path("wenda/", QuestionView.as_view(), name="wenda-slash"),
 ]
