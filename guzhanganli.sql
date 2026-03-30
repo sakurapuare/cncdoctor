@@ -1,17 +1,6 @@
 /*
- Navicat Premium Data Transfer
-
- Source Server         : localhost_3306
- Source Server Type    : MySQL
- Source Server Version : 50710
- Source Host           : 127.0.0.1:3306
- Source Schema         : sg_faq
-
- Target Server Type    : MySQL
- Target Server Version : 50710
- File Encoding         : 65001
-
- Date: 25/07/2019 16:49:17
+ Sanitized SQL seed for the built-in fault case repository.
+ Original connection metadata removed during the 2026 refactor.
 */
 
 SET NAMES utf8mb4;
